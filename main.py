@@ -1,8 +1,6 @@
 import random
 from os import system, name
-import re
 import sys
-from time import sleep
 
 # colors
 black = "\033[0;30m"
@@ -22,8 +20,10 @@ bright_magenta = "\033[0;95m"
 bright_cyan = "\033[0;96m"
 bright_white = "\033[0;97m"
 
-# player data
+
 class Player:
+    """Your character, which includes their properties and info"""
+
     def __init__(self):
         self.hp = 10
         self.weapon = None
@@ -43,9 +43,17 @@ class Player:
 
 
 class Game:
+    """The entire game instance and all its story"""
+
+    ## GAME MECHANICS ##
+
     def __init__(self) -> None:
         self.p = Player()
-        self.visited = {"Horde": False, "Feast": False, "Trophy": False}
+        self.visited = {
+            "Horde": False,
+            "Feast": False,
+            "Trophy": False,
+        }  # used for finding a random new room
 
     def clear(self):
         if name == "nt":
@@ -54,7 +62,8 @@ class Game:
             _ = system("clear")
 
     def roll(self, target=10, adv=False, dis=False):
-        """Roll a d20 with advantage or disadvantage and return whether it hit the target or not"""
+        """Roll a d20 with advantage or disadvantage and return whether it hit the target or not
+        Returns if you passed and what the roll was"""
         r1 = random.randint(1, 20)
         r2 = random.randint(1, 20)
         if adv:
@@ -77,8 +86,6 @@ class Game:
             if not (last and not trailing):
                 input("\nPress ENTER to continue")
                 self.clear()
-            # else:
-            #     print()
 
     def i(self, prompt=">> ", accepted=None, empty=True) -> str:
         """Get user input with only some accepted answers
@@ -160,9 +167,21 @@ Your stats:
             die = False
         return die, total_damage
 
+    ## PLOT ELEMENTS ##
+
+    def logo(self):
+        print(
+            """
+▄▄▄▄▄ ▄ .▄▄▄▄ .    ▄▄▄▄▄      • ▌ ▄ ·. ▄▄▄▄·           ·▄▄▄    ·▄▄▄▄• ▄▄▄· ▄▄▄  
+•██  ██▪▐█▀▄.▀·    •██  ▪     ·██ ▐███▪▐█ ▀█▪    ▪     ▐▄▄·    ▪▀·.█▌▐█ ▀█ ▀▄ █·
+ ▐█.▪██▀▐█▐▀▀▪▄     ▐█.▪ ▄█▀▄ ▐█ ▌▐▌▐█·▐█▀▀█▄     ▄█▀▄ ██▪     ▄█▀▀▀•▄█▀▀█ ▐▀▀▄ 
+ ▐█▌·██▌▐▀▐█▄▄▌     ▐█▌·▐█▌.▐▌██ ██▌▐█▌██▄▪▐█    ▐█▌.▐▌██▌.    █▌▪▄█▀▐█ ▪▐▌▐█•█▌
+ ▀▀▀ ▀▀▀ · ▀▀▀      ▀▀▀  ▀█▄▀▪▀▀  █▪▀▀▀·▀▀▀▀      ▀█▄▀▪▀▀▀     ·▀▀▀ • ▀  ▀ .▀  ▀
+ """
+        )
+
     def intro(self):
 
-        # intro stuff
         print(
             "Welcome, brave adventurer! What shall we call you? Type your name and hit ENTER."
         )
@@ -427,8 +446,11 @@ In the near-complete darkness from the extinguished candles, you roll in all dir
                 )
                 sys.exit()
 
+    ## GAME LOOP ##
+
     def play(self):
 
+        self.logo()
         self.intro()
         self.noises()
 
@@ -455,5 +477,8 @@ In the near-complete darkness from the extinguished candles, you roll in all dir
 
 
 if __name__ == "__main__":
-    g = Game()
-    g.play()
+    try:
+        g = Game()
+        g.play()
+    except KeyboardInterrupt:
+        print("Sorry to see you go!")
