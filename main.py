@@ -3,22 +3,12 @@ from os import system, name
 import sys
 
 # colors
-black = "\033[0;30m"
 red = "\033[0;31m"
 green = "\033[0;32m"
-yellow = "\033[0;33m"
-blue = "\033[0;34m"
-magenta = "\033[0;35m"
 cyan = "\033[0;36m"
-white = "\033[0;37m"
-bright_black = "\033[0;90m"
 bright_red = "\033[0;91m"
 bright_green = "\033[0;92m"
-bright_yellow = "\033[0;93m"
-bright_blue = "\033[0;94m"
-bright_magenta = "\033[0;95m"
-bright_cyan = "\033[0;96m"
-bright_white = "\033[0;97m"
+reset = "\u001b[0m"
 
 
 class Player:
@@ -74,7 +64,7 @@ class Game:
 
     def c(self, text="Press ENTER to continue"):
         """Continue by pressing ENTER"""
-        input(f"\n{text}\n")
+        input(bright_green + f"\n{text}" + reset)
 
     def pb(self, block, trailing=True):
         """Print a block of text, one paragraph at a time with ENTER in between
@@ -84,7 +74,7 @@ class Game:
             last = i == len(text) - 1
             print("\n" + par)
             if not (last and not trailing):
-                input("\nPress ENTER to continue")
+                self.c()
                 self.clear()
 
     def i(self, prompt=">> ", accepted=None, empty=True) -> str:
@@ -114,7 +104,7 @@ class Game:
         dic = {str(i + 1): o for i, o in enumerate(options)}
         accepted = dic.keys()  # accept only numbers
         for i, o in dic.items():
-            print(f"[{i}] {o}")
+            print(bright_green + f"[{i}] {o}" + reset)
         return dic[self.i(accepted=accepted)]
 
     def combat(
@@ -130,11 +120,13 @@ class Game:
 
         print(intro)
         print(
-            f"""
+            cyan
+            + f"""
 Your stats: 
 - Health: {self.p.hp}
 - Armor: {self.p.armor}
 - Weapon: {self.p.weapon}"""
+            + reset
         )
 
         total_damage = 0
@@ -142,7 +134,11 @@ Your stats:
             print(f"It's your turn, {self.p.name}. Hit ENTER to roll for damage.")
             input(">> ")
             attack = self.p.attack()
-            print(f"\nYou hit the {enemy} with {attack} points of damage!")
+            print(
+                bright_green
+                + f"\nYou hit the {enemy} with {attack} points of damage!"
+                + reset
+            )
             enemy_hp -= attack
             if end():
                 break
@@ -156,7 +152,9 @@ Your stats:
                 damage = 0
             total_damage += damage
             print(
-                f"\nIt attacks with {attack} points of damage, but you block {block} points. Take {damage} points of damage."
+                bright_red
+                + f"\nIt attacks with {attack} points of damage, but you block {block} points. Take {damage} points of damage."
+                + reset
             )
             self.p.take_damage(damage)
             if end():
@@ -171,13 +169,15 @@ Your stats:
 
     def logo(self):
         print(
-            """
+            red
+            + """
 ▄▄▄▄▄ ▄ .▄▄▄▄ .    ▄▄▄▄▄      • ▌ ▄ ·. ▄▄▄▄·           ·▄▄▄    ·▄▄▄▄• ▄▄▄· ▄▄▄  
 •██  ██▪▐█▀▄.▀·    •██  ▪     ·██ ▐███▪▐█ ▀█▪    ▪     ▐▄▄·    ▪▀·.█▌▐█ ▀█ ▀▄ █·
  ▐█.▪██▀▐█▐▀▀▪▄     ▐█.▪ ▄█▀▄ ▐█ ▌▐▌▐█·▐█▀▀█▄     ▄█▀▄ ██▪     ▄█▀▀▀•▄█▀▀█ ▐▀▀▄ 
  ▐█▌·██▌▐▀▐█▄▄▌     ▐█▌·▐█▌.▐▌██ ██▌▐█▌██▄▪▐█    ▐█▌.▐▌██▌.    █▌▪▄█▀▐█ ▪▐▌▐█•█▌
  ▀▀▀ ▀▀▀ · ▀▀▀      ▀▀▀  ▀█▄▀▪▀▀  █▪▀▀▀·▀▀▀▀      ▀█▄▀▪▀▀▀     ·▀▀▀ • ▀  ▀ .▀  ▀
  """
+            + reset
         )
 
     def intro(self):
@@ -371,12 +371,12 @@ In a swift motion, it has ripped out your throat. You immediately go limp, dead.
                 sys.exit()
         elif choice == "Hide":
             self.pb(
-                """
+                f"""
 You duck behind a rock, concealing yourself from their sight. But you didn’t anticipate their sense of smell. Back against the earth, you see red light thrown onto the opposite wall. You wait.
 Silence.
 Suddenly, a silhouette of a figure on the wall in front of you! You look up in terror and see a rotting face looking down at you, smiling.
 Before you can do anything, you find yourself surrounded, bony hands ripping at your clothing, surprisingly strong. With no time to reach for your weapon, they have torn you to pieces, ripping off your face and limbs with their brittle teeth. 
-You died."""
+{red}You died.{reset}"""
             )
             sys.exit()
         else:
@@ -387,7 +387,7 @@ You died."""
             self.clear()
             if died:
                 self.pb(
-                    "In one deft blow, a zombified adventurer knocks you unconscious. When you awake moments later, you find yourself surrounded by the figures. Your scream echoes in the chamber as they bite into your neck. Then, blackness. You died."
+                    f"In one deft blow, a zombified adventurer knocks you unconscious. When you awake moments later, you find yourself surrounded by the figures. Your scream echoes in the chamber as they bite into your neck. Then, blackness. {red}You died.{reset}"
                 )
                 sys.exit()
             else:
@@ -405,10 +405,10 @@ There’s only one thing: the entire feast is absent of any people. It’s as if
         choice = self.po(["Start feasting", "Walk around the table"])
         if choice.startswith("Start"):
             self.pb(
-                """
+                f"""
 You rush toward the table, tearing off a duck leg. It’s been weeks since you’ve eaten a proper meal. You stuff your face with mashed potatoes, steak tartare, and creamed broccoli. You cannot stop!
 You cannot stop. You really cannot stop. Something is terribly wrong. Your stomach starts to spasm uncontrollably, but you can’t stop your hands from impulsively cramming food in your mouth. It feels like lava is pooling in your stomach! You scream in pain, but it’s muffled with the food you cannot resist from eating. 
-Hours go past, agonizing beyond belief, with no control whatsoever. When you begin coughing up blood, it comes as a relief. Within a few hours, you physically wither away, your stomach dissolving itself and you from the inside out. You tumble to the ground, a pile of bloated skin and bones. You died. """,
+Hours go past, agonizing beyond belief, with no control whatsoever. When you begin coughing up blood, it comes as a relief. Within a few hours, you physically wither away, your stomach dissolving itself and you from the inside out. You tumble to the ground, a pile of bloated skin and bones. {red}You died. {reset}""",
                 False,
             )
             sys.exit()
@@ -439,9 +439,9 @@ When you unlock it, you find yourself once again in a new room."""
                 self.pick_room()
             else:
                 self.pb(
-                    """
+                    f"""
 You are running as fast as you can, but your limited diet the past few weeks has left you starving and weak. You slow down, and immediately the water sweeps you off of your feet, and you tumble in the strong current of thousands of tons of water. 
-In the near-complete darkness from the extinguished candles, you roll in all directions, running out of breath. Right before you run out of breath, the water mercifully smashes you into the rock wall at the end of the room, killing you instantly. You died. """,
+In the near-complete darkness from the extinguished candles, you roll in all directions, running out of breath. Right before you run out of breath, the water mercifully smashes you into the rock wall at the end of the room, killing you instantly. {red}You died. {reset}""",
                     False,
                 )
                 sys.exit()
