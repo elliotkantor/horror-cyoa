@@ -207,7 +207,7 @@ Your stats:
     def noises(self):
         self.pb(
             """
-After an hour or two of spelunking, you become aware of the deep rumbling of the earth surrounding you. Thus far the journey has been simple, placid. But now you’ve become acutely aware of the gaping mouth of earth slowly consuming you. 
+After an hour or two of spelunking, you become aware of the deep rumbling of the earth surrounding you. Thus far the journey has been simple, placid. But now you've become acutely aware of the gaping mouth of earth slowly consuming you. 
 To your right, you hear a distant wail. Silence. Then, laughing. A chill runs over you, straight through your clothing. You continue on, with nothing but the sound of the earth and your thoughts to accompany you."""
         )
 
@@ -231,12 +231,12 @@ After twenty minutes, you hit a dead end. There is a small pool of water, no mor
 You dip your toes into the pool. Frigid. You shed your {self.p.weapon} and armor, and plunge in.
 As you descend deeper, you begin swimming forward, trying to dive under the obstacle. After thirty seconds, you decide to try resurfacing. 
 Bonk.
-You hit your head on the rock above you. Okay, let’s try going further. You swim farther forward, float up, and...
+You hit your head on the rock above you. Okay, let's try going further. You swim farther forward, float up, and...
 Bonk.
 Panic starts to set in. What do you do?""",
             False,
         )
-        choice = self.po(["Try to turn around", "Keep swimming farther"])
+        choice = self.po(["Keep swimming farther", "Try to turn around"])
         if choice.startswith("Try"):
             self.turn_around()
             self.right()
@@ -244,14 +244,15 @@ Panic starts to set in. What do you do?""",
             self.keep_swimming()
 
     def turn_around(self):
+        damage = 2 + random.randint(-1, 1)
         self.pb(
-            """
+            f"""
 You tumble underwater, turn in the direction that seems backward, and swim full speed, lungs searing with pain. 
-Crack! Your head smashes into the rock ahead of you and you finally surface, gasping for breath. Your torch is laying on the damp ground, still alight like dying coals. As you yank yourself out of the freezing pool, you notice the steady flow of dark blood from your head. Take 3 damage. 
+Crack! Your head smashes into the rock ahead of you and you finally surface, gasping for breath. Your torch is laying on the damp ground, still alight like dying coals. As you yank yourself out of the freezing pool, you notice the steady flow of dark blood from your head. Take {damage} damage. 
 After a moment, you prepare for the journey back. You begin the steep ascent, weakened from your head injury. 
 """
         )
-        self.p.take_damage(3)
+        self.p.take_damage(damage)
 
         if self.roll(8)[0]:
             self.cave_monster()
@@ -288,11 +289,11 @@ Determined not to let the icy water take you, you give a few last kicks in what 
     def right(self):
         self.pb(
             """
-You continue down the rightmost path, and after half an hour of walking you realize you’ve been walking in circles. A spiral. The smell of metal is pungent in the air. The spiral is getting tighter, you notice, as you can see the curve of the wall growing nearer to you in the flickering light. 
+You continue down the rightmost path, and after half an hour of walking you realize you've been walking in circles. A spiral. The smell of metal is pungent in the air. The spiral is getting tighter, you notice, as you can see the curve of the wall growing nearer to you in the flickering light. 
 Suddenly, a freezing breeze extinguishes your torch completely. Total darkness. With nothing better to do, you fumble for the wall and follow it with your hand. 
-In the absence of light, your memory starts to take a hold of you. You recall the only other time you’ve experienced such rich blackness, on an Education trip into the Quarries of Perth. With your accolades huddled in the middle of a cathedral-like hollow, the guide had shut off the last light, letting total darkness take over. 
+In the absence of light, your memory starts to take a hold of you. You recall the only other time you've experienced such rich blackness, on an Education trip into the Quarries of Perth. With your accolades huddled in the middle of a cathedral-like hollow, the guide had shut off the last light, letting total darkness take over. 
 That was before. Everything is different now. 
-When the spiral has gotten so tight that you can scarcely believe you’re even getting anywhere, you finally see a steady white light down the hallway. 
+When the spiral has gotten so tight that you can scarcely believe you're even getting anywhere, you finally see a steady white light down the hallway. 
 At the end of the hallway, you find the mouth to a huge opening, larger than the one you visited so many years ago. """
         )
 
@@ -372,7 +373,7 @@ In a swift motion, it has ripped out your throat. You immediately go limp, dead.
         elif choice == "Hide":
             self.pb(
                 f"""
-You duck behind a rock, concealing yourself from their sight. But you didn’t anticipate their sense of smell. Back against the earth, you see red light thrown onto the opposite wall. You wait.
+You duck behind a rock, concealing yourself from their sight. But you didn't anticipate their sense of smell. Back against the earth, you see red light thrown onto the opposite wall. You wait.
 Silence.
 Suddenly, a silhouette of a figure on the wall in front of you! You look up in terror and see a rotting face looking down at you, smiling.
 Before you can do anything, you find yourself surrounded, bony hands ripping at your clothing, surprisingly strong. With no time to reach for your weapon, they have torn you to pieces, ripping off your face and limbs with their brittle teeth. 
@@ -392,22 +393,22 @@ Before you can do anything, you find yourself surrounded, bony hands ripping at 
                 sys.exit()
             else:
                 self.pb(
-                    f"With the final attack, you’ve cleared yourself a path to what can only be the exit at the far end of the room! In all the chaos, you’ve escaped to the back of the room with only {damage} points of damage and dive into the darkness. A rock slides into place behind you, locking you inside but protecting you from the monsters behind. You walk a few paces ahead and find yourself in another room."
+                    f"With the final attack, you've cleared yourself a path to what can only be the exit at the far end of the room! In all the chaos, you've escaped to the back of the room with only {damage} points of damage and dive into the darkness. A rock slides into place behind you, locking you inside but protecting you from the monsters behind. You walk a few paces ahead and find yourself in another room."
                 )
                 self.pick_room()
 
     def feast(self):
         self.pb(
             """
-When you finally right yourself, you notice you’re in a fabulous banquet hall! You become aware of the smell of roast duck, exquisitely prepared beef wellington, and aromatic desserts. The slender white candles on the table are burning as bright as ever, as if they had just been lit. The long table extends hundreds of feet in either direction, farther than you can see from here. 
-There’s only one thing: the entire feast is absent of any people. It’s as if all the guests had stepped outside seconds before your arrival. You can still see the hot steam rising from the poultry. Your stomach growls and seizes. What do you do?"""
+When you finally right yourself, you notice you're in a fabulous banquet hall! You become aware of the smell of roast duck, exquisitely prepared beef wellington, and aromatic desserts. The slender white candles on the table are burning as bright as ever, as if they had just been lit. The long table extends hundreds of feet in either direction, farther than you can see from here. 
+There's only one thing: the entire feast is absent of any people. It's as if all the guests had stepped outside seconds before your arrival. You can still see the hot steam rising from the poultry. Your stomach growls and seizes. What do you do?"""
         )
         choice = self.po(["Start feasting", "Walk around the table"])
         if choice.startswith("Start"):
             self.pb(
                 f"""
-You rush toward the table, tearing off a duck leg. It’s been weeks since you’ve eaten a proper meal. You stuff your face with mashed potatoes, steak tartare, and creamed broccoli. You cannot stop!
-You cannot stop. You really cannot stop. Something is terribly wrong. Your stomach starts to spasm uncontrollably, but you can’t stop your hands from impulsively cramming food in your mouth. It feels like lava is pooling in your stomach! You scream in pain, but it’s muffled with the food you cannot resist from eating. 
+You rush toward the table, tearing off a duck leg. It's been weeks since you've eaten a proper meal. You stuff your face with mashed potatoes, steak tartare, and creamed broccoli. You cannot stop!
+You cannot stop. You really cannot stop. Something is terribly wrong. Your stomach starts to spasm uncontrollably, but you can't stop your hands from impulsively cramming food in your mouth. It feels like lava is pooling in your stomach! You scream in pain, but it's muffled with the food you cannot resist from eating. 
 Hours go past, agonizing beyond belief, with no control whatsoever. When you begin coughing up blood, it comes as a relief. Within a few hours, you physically wither away, your stomach dissolving itself and you from the inside out. You tumble to the ground, a pile of bloated skin and bones. {red}You died. {reset}""",
                 False,
             )
@@ -415,7 +416,7 @@ Hours go past, agonizing beyond belief, with no control whatsoever. When you beg
         else:
             self.pb(
                 """
-This doesn’t feel right. You sidestep around the table, keeping your distance. You hurriedly walk toward the end of the table, just at the edge of your sight. In your haste, you don’t notice the tripwire that you stumble into until you trip and fall. 
+This doesn't feel right. You sidestep around the table, keeping your distance. You hurriedly walk toward the end of the table, just at the edge of your sight. In your haste, you don't notice the tripwire that you stumble into until you trip and fall. 
 You immediately hear a low groan of rock shifting, then the sound of water from behind you. What do you do?"""
             )
             choice = self.po(["Run", "Investigate"])
@@ -425,7 +426,7 @@ You immediately hear a low groan of rock shifting, then the sound of water from 
                 )
             else:
                 self.pb(
-                    "You surge forward, away from the rushing water. You’re nearly at the end of the table, and just beyond is a gaping hole, a huge stone acting as an open door. When you look over your shoulder, you see a wall of water 50 feet behind you, it’s gaining on you!"
+                    "You surge forward, away from the rushing water. You're nearly at the end of the table, and just beyond is a gaping hole, a huge stone acting as an open door. When you look over your shoulder, you see a wall of water 50 feet behind you, it's gaining on you!"
                 )
             self.pb("Roll for an athletics check!")
             survive, roll = self.roll(dis=choice == "Investigate")
@@ -433,7 +434,7 @@ You immediately hear a low groan of rock shifting, then the sound of water from 
             if survive:
                 self.pb(
                     """
-In a surge of athleticism, you sprint faster than ever before and scramble into the dark room beyond. As soon as you step through, the massive rock, thousands of pounds, no doubt, slides effortlessly into place behind you with a thud. Less than a second after, you hear the deep crash of tons of water against rock. You quickly step back from the door, unsure of how strong it is. As you back up, you bump into a great wooden door. It’s unlocked.
+In a surge of athleticism, you sprint faster than ever before and scramble into the dark room beyond. As soon as you step through, the massive rock, thousands of pounds, no doubt, slides effortlessly into place behind you with a thud. Less than a second after, you hear the deep crash of tons of water against rock. You quickly step back from the door, unsure of how strong it is. As you back up, you bump into a great wooden door. It's unlocked.
 When you unlock it, you find yourself once again in a new room."""
                 )
                 self.pick_room()
@@ -441,7 +442,7 @@ When you unlock it, you find yourself once again in a new room."""
                 self.pb(
                     f"""
 You are running as fast as you can, but your limited diet the past few weeks has left you starving and weak. You slow down, and immediately the water sweeps you off of your feet, and you tumble in the strong current of thousands of tons of water. 
-In the near-complete darkness from the extinguished candles, you roll in all directions, running out of breath. Right before you run out of breath, the water mercifully smashes you into the rock wall at the end of the room, killing you instantly. {red}You died. {reset}""",
+In the near-complete darkness from the extinguished candles, you roll in all directions, running out of breath. Right before you drown, the water mercifully smashes you into the rock wall at the end of the room, killing you instantly. {red}You died. {reset}""",
                     False,
                 )
                 sys.exit()
@@ -456,7 +457,7 @@ In the near-complete darkness from the extinguished candles, you roll in all dir
 
         # branch
         print(
-            f"You’ve found a fork in the tunnel, {self.p.name}! In your exhausted stupor you’ve almost missed it. Quickly, pick a direction to go in."
+            f"You've found a fork in the tunnel, {self.p.name}! In your exhausted stupor you've almost missed it. Quickly, pick a direction to go in."
         )
         direction = self.po(["Left", "Right"])
         if direction == "Left":
